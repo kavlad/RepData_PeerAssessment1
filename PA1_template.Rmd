@@ -2,19 +2,58 @@
 
 
 ## Loading and preprocessing the data
+```{r echo=TRUE}
+library(data.table)
+setwd("e:\\5")
+data <- as.data.table(read.csv("activity.csv"))
 
-
+ii <- which(is.na(data$steps))
+data.zeroed <- data
+data.zeroed <- data.zeroed[-ii]
+```
 
 ## What is mean total number of steps taken per day?
 
-
+```{r echo=TRUE}
+totals <- data.zeroed[,sum(steps),by=date]
+hist(totals$V1)
+mean(totals$V1)
+median(totals$V1)
+```
 
 ## What is the average daily activity pattern?
 
-
+```{r echo=TRUE}
+data.zeroed <- data
+data.zeroed$steps[ii] <- 0
+avg.values <- data.zeroed[,mean(steps),by=interval]
+plot(avg.values$V1, type='l')
+which.max(avg.values$V1)
+```
 
 ## Imputing missing values
 
+For imputing just write zero value:
+
+```{r echo=TRUE}
+ii <- which(is.na(data$steps))
+length(ii)
+
+data.imputed <- data
+data.imputed[ii]$steps <- 0
+
+
+totals <- data.imputed[,sum(steps),by=date]
+hist(totals$V1)
+mean(totals$V1)
+median(totals$V1)
+```
+
+We can seethat mean & median values differ from the estimates from the first part of the assignment.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+
+
